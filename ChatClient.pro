@@ -15,9 +15,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ccnetmanager.cpp
+    ccnetmanager.cpp \
+    ccchannel.cpp
 
 HEADERS  += mainwindow.h \
-    ccnetmanager.h
+    ccnetmanager.h \
+    ccchannel.h
 
 FORMS    += mainwindow.ui
