@@ -17,6 +17,7 @@ public slots:
     void onNewMessage(QString msg);
 
 private:
+    QString m_name;
     QString m_text;
 
 };

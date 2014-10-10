@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 
-//class CCNetManager;
 #include "ccnetmanager.h"
+#include "ccmanager.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,20 +20,23 @@ public:
 
 public slots:
     void newMsgCome(QString msg);
-    void sendMsgBegin();
-    void connectedToServer();
-    void disconnectedFromServer();
-    void reconnect();
+    void connectedToServer(void);
+    void disconnectedFromServer(void);
+    void logined(void);
 
 signals:
     void newMsgForSend(QString msg);
+    void mkLogin(QString login);
+    void mkConnect(void);
 
 private slots:
-    void on_pbSend_clicked();
+    void reconnect(void);
+    void login(void);
+    void sendMsgBegin(void);
 
 private:
     Ui::MainWindow *ui;
-    CCNetManager m_netmanager;
+    CCManager m_manager;
 
 };
 
