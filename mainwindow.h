@@ -26,7 +26,7 @@ public slots:
 
 signals:
     void newMsgForSend(QString msg);
-    void mkLogin(QString login);
+    void mkLogin(QString login, QString pwd, QString email);
     void mkConnect(void);
 
 private slots:

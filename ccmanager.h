@@ -16,20 +16,24 @@ signals:
     void connected(void);
     void disconnected(void);
     void msgReceived(QString msg);
+    void msgForSend(QString msg);
+    void make_connect(void);
+    void make_disconnect(void);
 
 public slots:
     void mkConnect(void);
     void mkDisconnect(void);
     void netConnected(void);
     void netDisconnected(void);
-    void mkLogin(QString login);
+    void mkLogin(QString login, QString pwd, QString email);
     void newMsgReceived(QString msg);
     void newMsgForSend(QString msg);
 
 private:
     QMap<int,CCChannel*> m_channels;
     CCNetManager m_netManager;
-    int curChannel;
+    int m_curChannel;
+    int m_loginStage;
 
 };
 

@@ -47,7 +47,10 @@ void MainWindow::reconnect(void) {
 
 void MainWindow::login(void) {
     if ( !ui->leLogin->text().isEmpty() ) {
-        emit mkLogin(ui->leLogin->text());
+if ( ui->leLogin->text()=="Max" )
+emit mkLogin(ui->leLogin->text(),ui->leLogin->text(),"max@mail.mu");
+else
+        emit mkLogin(ui->leLogin->text(),ui->leLogin->text(),"mail@mail.mu");
     }
 }
 
