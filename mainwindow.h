@@ -5,6 +5,7 @@
 
 #include "ccnetmanager.h"
 #include "ccmanager.h"
+#include "ccchannel.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,9 @@ public slots:
     void connectedToServer(void);
     void disconnectedFromServer(void);
     void logined(void);
+    void unlogined(void);
+    void channelsReceived(QMap<int,CCChannel*>  map);
+    void channelChosen(int index);
 
 signals:
     void newMsgForSend(QString msg);
@@ -37,6 +41,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     CCManager m_manager;
+    int m_curChannel;
+    QMap<int,CCChannel*> m_channels;
 
 };
 

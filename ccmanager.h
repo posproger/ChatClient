@@ -19,6 +19,9 @@ signals:
     void msgForSend(QString msg);
     void make_connect(void);
     void make_disconnect(void);
+    void logined(void);
+    void unlogined(void);
+    void channelsReceived(QMap<int,CCChannel*>);
 
 public slots:
     void mkConnect(void);
@@ -26,6 +29,7 @@ public slots:
     void netConnected(void);
     void netDisconnected(void);
     void mkLogin(QString login, QString pwd, QString email);
+    void getChannels(void);
     void newMsgReceived(QString msg);
     void newMsgForSend(QString msg);
 
