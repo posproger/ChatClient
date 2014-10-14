@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QDateTime>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -54,12 +55,13 @@ void MainWindow::reconnect(void) {
 void MainWindow::login(void) {
     qDebug() << "MainWindow::login";
     if ( !ui->leLogin->text().isEmpty() ) {
-if ( ui->leLogin->text()=="Max" )
-emit mkLogin(ui->leLogin->text(),ui->leLogin->text(),"max@mail.mu");
-else if ( ui->leLogin->text()=="Def" )
-emit mkLogin(ui->leLogin->text(),ui->leLogin->text(),"defoer@mail.mu");
-else
-        emit mkLogin(ui->leLogin->text(),ui->leLogin->text(),"mail@mail.mu");
+        bool ok;
+        QString spwd = QInputDialog::getText(this, tr("Enter your password"), tr("Password:"), QLineEdit::Normal, "", &ok);
+        if ( !ok ) return;
+        QString mail = QInputDialog::getText(this, tr("Enter your e-mail"), tr("E-Mail:"), QLineEdit::Normal, "", &ok);
+        if ( ok ) {
+            emit mkLogin(ui->leLogin->text(),spwd,mail);
+        }
     }
 }
 
