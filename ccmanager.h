@@ -31,7 +31,7 @@ public slots:
     void mkLogin(QString login, QString pwd, QString email);
     void getChannels(void);
     void newMsgReceived(QString msg);
-    void newMsgForSend(QString msg);
+    void newMsgForSend(QString msg, int channel);
 
 private:
     QMap<int,CCChannel*> m_channels;

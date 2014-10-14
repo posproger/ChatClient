@@ -13,10 +13,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pbReconnect->setEnabled(true);
     m_manager.mkConnect();
     m_curChannel = -1;
-    connect(this,SIGNAL(newMsgForSend(QString)),&m_manager,SLOT(newMsgForSend(QString)));
+    connect(this,SIGNAL(newMsgForSend(QString,int)),&m_manager,SLOT(newMsgForSend(QString,int)));
     connect(this,SIGNAL(mkLogin(QString,QString,QString)),&m_manager,SLOT(mkLogin(QString,QString,QString)));
     connect(this,SIGNAL(mkConnect()),&m_manager,SLOT(mkConnect()));
-    connect(&m_manager,SIGNAL(msgReceived(QString)),this,SLOT(newMsgCome(QString)));
+    //connect(&m_manager,SIGNAL(msgReceived(QString)),this,SLOT(newMsgCome(QString)));
     connect(&m_manager,SIGNAL(connected()),this,SLOT(connectedToServer()));
     connect(&m_manager,SIGNAL(disconnected()),this,SLOT(disconnectedFromServer()));
     connect(&m_manager,SIGNAL(logined()),this,SLOT(logined()));
@@ -56,6 +56,8 @@ void MainWindow::login(void) {
     if ( !ui->leLogin->text().isEmpty() ) {
 if ( ui->leLogin->text()=="Max" )
 emit mkLogin(ui->leLogin->text(),ui->leLogin->text(),"max@mail.mu");
+else if ( ui->leLogin->text()=="Def" )
+emit mkLogin(ui->leLogin->text(),ui->leLogin->text(),"defoer@mail.mu");
 else
         emit mkLogin(ui->leLogin->text(),ui->leLogin->text(),"mail@mail.mu");
     }
@@ -81,7 +83,7 @@ void MainWindow::newMsgCome(QString msg) {
 void MainWindow::sendMsgBegin(void) {
     if ( !ui->teMsg->toPlainText().isEmpty() ) {
         ui->pbSend->setEnabled(false);
-        emit newMsgForSend(ui->teMsg->toPlainText());
+        emit newMsgForSend(ui->teMsg->toPlainText(),m_curChannel);
         ui->tbMainText->append(QDateTime::currentDateTimeUtc().toString("HH:mm:ss") + " ME: " + ui->teMsg->toPlainText());
         ui->teMsg->clear();
         ui->pbSend->setEnabled(true);
@@ -107,15 +109,21 @@ void MainWindow::channelChosen(int index) {
     ui->teMsg->setEnabled(false);
     int res = ui->cbChannel->currentData().toInt();
     if ( res!=m_curChannel ) {
+        if ( m_curChannel>0 ) {
+            disconnect(m_channels.value(m_curChannel),SIGNAL(newMessage(QString)),this,SLOT(newMsgCome(QString)));
+        }
         m_curChannel = res;
         if ( res==0 ) {
             ui->tbMainText->clear();
         } else {
             ui->tbMainText->clear();
             if ( m_channels.contains(res) ) {
+                connect(m_channels.value(res),SIGNAL(newMessage(QString)),this,SLOT(newMsgCome(QString)));
                 ui->tbMainText->append(m_channels.value(res)->getText());
                 ui->pbSend->setEnabled(true);
                 ui->teMsg->setEnabled(true);
+            } else {
+                m_curChannel = 0;
             }
         }
     } else {
@@ -123,3 +131,4 @@ void MainWindow::channelChosen(int index) {
         ui->teMsg->setEnabled(true);
     }
 }
+

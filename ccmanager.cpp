@@ -98,17 +98,36 @@ void CCManager::newMsgReceived(QString msg) {
                 } else {
                     /// Надо что-то сделать
                 }
+            } else if ( cmd==QString("MSG") ) {
+                qDebug() << "MSG cmd";
+                QString res = jobj["res"].toString();
+                //QString id = jobj["id"].toString();
+                int ch = jobj["ch"].toInt();
+                if ( res=="IN" && ch!=0 ) {
+                    QString smsg = jobj["msg"].toString();
+                    CCChannel* cch = m_channels.value(ch);
+                    if ( cch ) {
+                        cch->onNewMessage(smsg);
+                    }
+                } else {
+                    /// Пока игнорируем ответы
+                    qDebug() << "Ignoring message.\n" << msg;
+                }
+            } else {
+                qDebug() << "WARNING! Unknown message type.\n" << msg;
             }
+        } else {
+            qDebug() << "WARNING! Invalid format.\n" << msg;
         }
     }
 }
 
-void CCManager::newMsgForSend(QString msg) {
+void CCManager::newMsgForSend(QString msg, int channel) {
     if ( m_netManager.isConnected() && m_loginStage==2 ) {
         QJsonObject joRequest;
         joRequest["c"]=QString("MSG");
         joRequest["id"]="2";
-        joRequest["ch"]=m_curChannel;
+        joRequest["ch"]=channel;
         joRequest["msg"]=msg;
         QJsonDocument jdRequest(joRequest);
         emit msgForSend(jdRequest.toJson());

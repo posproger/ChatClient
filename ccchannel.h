@@ -16,6 +16,7 @@ public:
     QString getText(void) { return m_text; }
 
 signals:
+    void newMessage(QString msg);
 
 public slots:
     void onNewMessage(QString msg);

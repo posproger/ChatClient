@@ -29,7 +29,7 @@ public slots:
     void channelChosen(int index);
 
 signals:
-    void newMsgForSend(QString msg);
+    void newMsgForSend(QString msg, int channel);
     void mkLogin(QString login, QString pwd, QString email);
     void mkConnect(void);
 
