@@ -60,6 +60,16 @@ void CCManager::getChannels(void) {
     }
 }
 
+void CCManager::getChannelHistory(int channel) {
+    if ( m_netManager.isConnected() && m_loginStage==2 ) {
+        QJsonObject joRequest;
+        joRequest["c"]=QString("CHH");
+        joRequest["ch"]=channel;
+        QJsonDocument jdRequest(joRequest);
+        emit msgForSend(jdRequest.toJson());
+    }
+}
+
 void CCManager::newMsgReceived(QString msg) {
     qDebug() << "CCManager::newMsgReceived\n" << msg;
     if ( !msg.isEmpty() ) {
@@ -81,7 +91,6 @@ void CCManager::newMsgReceived(QString msg) {
             } else if ( cmd==QString("GCH") ) {
                 qDebug() << "GCH cmd";
                 QString res = jobj["res"].toString();
-                ; // QMap<int,CCChannel*> m_channels;
                 if ( res=="OK" ) {
                     m_channels.clear();
                     QJsonArray jchs = jobj["chs"].toArray();
@@ -92,6 +101,7 @@ void CCManager::newMsgReceived(QString msg) {
                         if ( index>0 && !name.isEmpty() ) {
                             CCChannel * ch = new CCChannel(name);
                             m_channels.insert(index,ch);
+                            getChannelHistory(index);
                         }
                     }
                     emit channelsReceived(m_channels);
@@ -112,6 +122,20 @@ void CCManager::newMsgReceived(QString msg) {
                 } else {
                     /// Пока игнорируем ответы
                     qDebug() << "Ignoring message.\n" << msg;
+                }
+            } else if ( cmd==QString("CHH") ) {
+                qDebug() << "CHH cmd";
+                QString res = jobj["res"].toString();
+                int chid = jobj["ch"].toInt();
+                CCChannel* cch = m_channels.value(chid);
+                if ( res=="OK" && cch) {
+                    QJsonArray msgs = jobj["msgs"].toArray();
+                    for ( int i=0; i<msgs.size(); ++i ) {
+                        QString smsg = msgs[i].toString();
+                        cch->onNewMessage(smsg);
+                    }
+                } else {
+                    qDebug() << "WARNING! CHH error.\n" << msg;
                 }
             } else {
                 qDebug() << "WARNING! Unknown message type.\n" << msg;

@@ -30,6 +30,7 @@ public slots:
     void netDisconnected(void);
     void mkLogin(QString login, QString pwd, QString email);
     void getChannels(void);
+    void getChannelHistory(int channel);
     void newMsgReceived(QString msg);
     void newMsgForSend(QString msg, int channel);
 

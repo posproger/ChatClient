@@ -84,7 +84,7 @@ void MainWindow::sendMsgBegin(void) {
     if ( !ui->teMsg->toPlainText().isEmpty() ) {
         ui->pbSend->setEnabled(false);
         emit newMsgForSend(ui->teMsg->toPlainText(),m_curChannel);
-        ui->tbMainText->append(QDateTime::currentDateTimeUtc().toString("HH:mm:ss") + " ME: " + ui->teMsg->toPlainText());
+        //ui->tbMainText->append(QDateTime::currentDateTimeUtc().toString("HH:mm:ss") + " ME: " + ui->teMsg->toPlainText());
         ui->teMsg->clear();
         ui->pbSend->setEnabled(true);
     }
@@ -119,7 +119,7 @@ void MainWindow::channelChosen(int index) {
             ui->tbMainText->clear();
             if ( m_channels.contains(res) ) {
                 connect(m_channels.value(res),SIGNAL(newMessage(QString)),this,SLOT(newMsgCome(QString)));
-                ui->tbMainText->append(m_channels.value(res)->getText());
+                ui->tbMainText->insertPlainText(m_channels.value(res)->getText());
                 ui->pbSend->setEnabled(true);
                 ui->teMsg->setEnabled(true);
             } else {
