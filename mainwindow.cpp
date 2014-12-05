@@ -46,6 +46,8 @@ void MainWindow::disconnectedFromServer(void){
     ui->pbLogin->setEnabled(false);
     ui->leLogin->setEnabled(false);
     ui->pbReconnect->setEnabled(true);
+    ui->cbChannel->clear();
+    ui->cbChannel->setEnabled(false);
 }
 
 void MainWindow::reconnect(void) {

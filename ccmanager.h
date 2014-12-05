@@ -22,6 +22,7 @@ signals:
     void logined(void);
     void unlogined(void);
     void channelsReceived(QMap<int,CCChannel*>);
+    void persChannelsReceived(QMap<QString,CCChannel*>);
 
 public slots:
     void mkConnect(void);
@@ -30,12 +31,14 @@ public slots:
     void netDisconnected(void);
     void mkLogin(QString login, QString pwd, QString email);
     void getChannels(void);
+    void getPersChannels(void);
     void getChannelHistory(int channel);
     void newMsgReceived(QString msg);
     void newMsgForSend(QString msg, int channel);
 
 private:
     QMap<int,CCChannel*> m_channels;
+    QMap<QString,CCChannel*> m_persChannels;
     CCNetManager m_netManager;
     int m_curChannel;
     int m_loginStage;

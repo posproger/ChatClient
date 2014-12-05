@@ -32,6 +32,8 @@ void CCManager::netConnected(void) {
 }
 
 void CCManager::netDisconnected(void) {
+    m_channels.clear();
+    m_persChannels.clear();
     m_loginStage=0;
     emit disconnected();
 }
@@ -60,6 +62,18 @@ void CCManager::getChannels(void) {
     }
 }
 
+void CCManager::getPersChannels(void) {
+    if ( m_netManager.isConnected() && m_loginStage==2 ) {
+        ; /// Пока заглушка на персональные каналы - должна быть проверка онлайн и т.п.
+        CCChannel * ch = new CCChannel("Max");
+        m_persChannels.insert("Max",ch);
+        ch = new CCChannel("Def");
+        m_persChannels.insert("Def",ch);
+        emit persChannelsReceived(m_persChannels);
+    }
+}
+
+
 void CCManager::getChannelHistory(int channel) {
     if ( m_netManager.isConnected() && m_loginStage==2 ) {
         QJsonObject joRequest;
@@ -84,6 +98,7 @@ void CCManager::newMsgReceived(QString msg) {
                     m_loginStage=2;
                     emit logined();
                     getChannels();
+                    getPersChannels();
                 } else {
                     m_loginStage=0;
                     emit unlogined();
